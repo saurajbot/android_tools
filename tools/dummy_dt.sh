@@ -8,6 +8,13 @@
 
 # Store project path
 PROJECT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )/.." >/dev/null && pwd )"
+PROJ_DIR=$(< "$HOME"/telegram/prj_dir)
+TG_TOKEN=$(< "${PROJ_DIR}"/.tg_token)
+CHAT_ID=$(< "${PROJ_DIR}"/.tg_chat)
+M_ID=$(< "${PROJ_DIR}"/.tg_mid)
+C_ID=$(< "${PROJ_DIR}"/.tg_cid)
+CHAT_ID=$(< "$HOME"/telegram/chat_id)
+MESSAGE_ID=$(< "$HOME"/telegram/msg_id)
 
 # Common stuff
 source $PROJECT_DIR/helpers/common_script.sh "y"
@@ -106,7 +113,7 @@ git_op () {
     git init . > /dev/null 2>&1
     git checkout -b $BRANCH > /dev/null 2>&1
     git add --all > /dev/null 2>&1
-    git -c "user.name=saurajbot" -c "user.email=rommirrorer@gmail.com" commit -sm "$DESCRIPTION" > /dev/null 2>&1
+    git -c "user.name=noobyysauraj" -c "user.email=gitsauraj@gmail.com" commit -sm "$DESCRIPTION" > /dev/null 2>&1
     git push https://"$GIT_TOKEN"@github.com/"$ORG"/"$DT_REPO".git --all > /dev/null 2>&1
     echo -e "Dumping blobs"
     rm -rf "$PROJECT_DIR"/vendor/"$BRAND"/"$DEVICE"/
@@ -130,11 +137,13 @@ git_op () {
         printf "\n<b>Fingerprint:</b> $FINGERPRINT" >> $PROJECT_DIR/dummy_dt/working/tg.html
         [[ ! -z "$PLATFORM" ]] && printf "\n<b>Platform:</b> $PLATFORM" >> $PROJECT_DIR/dummy_dt/working/tg.html
         printf "\n<b>GitHub:</b>" >> $PROJECT_DIR/dummy_dt/working/tg.html
-        printf "\n<a href=\"https://github.com/$ORG/$DT_REPO/tree/$BRANCH/\">Device tree</a>" >> $PROJECT_DIR/dummy_dt/working/tg.html
-        printf "\n<a href=\"https://github.com/$ORG/$VT_REPO/tree/$BRANCH/\">Vendor tree</a>" >> $PROJECT_DIR/dummy_dt/working/tg.html
+        printf "\n<a href=\"https://github.com/$ORG/$DT_REPO/tree/$BRANCH/\">Device tree</a>" >> "$HOME"/telegram/tg.html
+        printf "\n<a href=\"https://github.com/$ORG/$VT_REPO/tree/$BRANCH/\">Vendor tree</a>" >> "$HOME"/telegram/tg.html
+        printf "\n<b>ғᴏʟʟᴏᴡ%s @saurajdumps</b>"" >> "$HOME"/telegram/tg.html
         CHAT_ID="@saurajdumps"
-        HTML_FILE=$(cat $PROJECT_DIR/dummy_dt/working/tg.html)
-        curl -s "https://api.telegram.org/bot${TG_API}/sendmessage" --data "text=${HTML_FILE}&chat_id=${CHAT_ID}&parse_mode=HTML&disable_web_page_preview=True" > /dev/null 2>&1
+        HTML_FILE=$(cat "$HOME"/telegram/tg.html)
+        curl -s "https://api.telegram.org/bot${TG_TOKEN}/editMessageText" --data "message_id=${MESSAGE_ID}&text=${HTML_FILE}&chat_id=${CHAT_ID}&parse_mode=HTML&disable_web_page_preview=True"
+        curl -s "https://api.telegram.org/bot${TG_TOKEN}/editMessageText" --data "message_id=${M_ID}&text=${HTML_FILE}&chat_id=${C_ID}&parse_mode=HTML&disable_web_page_preview=True"
     fi
 }
 
